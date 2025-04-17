@@ -1,10 +1,6 @@
 #include <ATen/ATen.h>
 #include <ATen/cuda/CUDAContext.h>
 
-#include <THC/THC.h>
-#include <THC/THCAtomics.cuh>
-#include <THC/THCDeviceUtils.cuh>
-
 template <typename T>
 __global__ void ca_forward_kernel(const T *t, const T *f, T *weight, int num, int chn, int height, int width) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
@@ -207,7 +203,7 @@ at::Tensor ca_forward_cuda(const at::Tensor& t, const at::Tensor& f) {
             weight.contiguous().data<scalar_t>(),
             n, c, h, w);
     });
-    THCudaCheck(cudaGetLastError());
+    AT_CUDA_CHECK(cudaGetLastError());
     return weight;
 }
 
@@ -249,7 +245,7 @@ std::tuple<at::Tensor, at::Tensor> ca_backward_cuda(const at::Tensor& dw, const 
             df.contiguous().data<scalar_t>(),
             n, c, h, w);
     });
-    THCudaCheck(cudaGetLastError());
+    AT_CUDA_CHECK(cudaGetLastError());
     return std::make_tuple(dt, df);
 }
 
@@ -279,7 +275,7 @@ at::Tensor ca_map_forward_cuda(const at::Tensor& weight, const at::Tensor& g) {
             out.contiguous().data<scalar_t>(),
             n, c, h, w);
     });
-    THCudaCheck(cudaGetLastError());
+    AT_CUDA_CHECK(cudaGetLastError());
     return out;
 }
 
@@ -321,7 +317,7 @@ std::tuple<at::Tensor, at::Tensor> ca_map_backward_cuda(const at::Tensor& dout, 
             dg.contiguous().data<scalar_t>(),
             n, c, h, w);
     });
-    THCudaCheck(cudaGetLastError());
+    AT_CUDA_CHECK(cudaGetLastError());
     return std::make_tuple(dw, dg);
 }
 
