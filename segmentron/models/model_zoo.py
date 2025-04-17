@@ -43,5 +43,5 @@ def load_model_pretrain(model):
     else:
         if cfg.TEST.TEST_MODEL_PATH:
             logging.info('load test model from {}'.format(cfg.TEST.TEST_MODEL_PATH))
-            msg = model.load_state_dict(torch.load(cfg.TEST.TEST_MODEL_PATH), strict=False)
+            msg = model.load_state_dict(torch.load(cfg.TEST.TEST_MODEL_PATH, map_location=torch.device('cpu')), strict=False)
             logging.info(msg)
