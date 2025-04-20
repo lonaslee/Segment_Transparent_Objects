@@ -52,11 +52,11 @@ class TransSegmentationBoundary(SegmentationDataset):
             if self.transform is not None:
                 img = self.transform(img)
             return img, os.path.basename(self.images[index])
-        mask = Image.open(self.mask_paths[index])
+        mask = Image.open(self.mask_paths[index]).convert("L")
         # 转换mask
-        mask = np.array(mask)[:,:,:3].mean(-1)
-        mask[mask==85.0] = 1
-        mask[mask==255.0] = 2
+        mask = np.array(mask)#[:,:,:3].mean(-1)
+        mask = (mask == 255).astype('int32')
+        # mask[mask < 100] = 0
         assert mask.max()<=2, mask.max()
         mask = Image.fromarray(mask)
 
@@ -111,7 +111,7 @@ def _get_trans10k_pairs(folder, split='train'):
 
         for imgname in imgs:
             imgpath = os.path.join(img_folder, imgname)
-            maskname = imgname.replace('.jpg', '_mask.png')
+            maskname = imgname.replace('.jpg', '_mask.jpg')
             maskpath = os.path.join(mask_folder, maskname)
             if os.path.isfile(imgpath) and os.path.isfile(maskpath):
                 img_paths.append(imgpath)
