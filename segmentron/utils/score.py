@@ -150,7 +150,7 @@ def batch_ber(output, target, class_ids=[1,2]):
         N_p = torch.sum(target == class_id)
         N_n = torch.sum(target != class_id)
         TP = torch.sum((predict == target) * valid)
-        TN = torch.sum((predict == target) * (1 - valid))
+        TN = torch.sum((predict == target) * (1 - valid.float()))
 
         N_p = N_p.float(); N_n = N_n.float(); TP = TP.float(); TN = TN.float()
         ber = 1 - 1/2 * (TP / N_p + TN / N_n)
