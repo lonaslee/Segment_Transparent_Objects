@@ -1,6 +1,8 @@
 *.pth
 .idea/
 env/
+demo/result/*
+demo/imgs/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

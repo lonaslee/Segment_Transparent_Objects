@@ -55,7 +55,9 @@ class TransSegmentationBoundary(SegmentationDataset):
         mask = Image.open(self.mask_paths[index]).convert("L")
         # 转换mask
         mask = np.array(mask)#[:,:,:3].mean(-1)
-        mask = (mask == 255).astype('int32')
+        mask[mask==100] = 1
+        mask[mask==200] = 2
+        # mask = (mask == 255).astype('int32')
         # mask[mask < 100] = 0
         assert mask.max()<=2, mask.max()
         mask = Image.fromarray(mask)
