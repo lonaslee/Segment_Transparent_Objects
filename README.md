@@ -18,6 +18,8 @@ For downloading the data, you can refer to [Trans10K Website](https://xieenze.gi
 - IPython
 - thop
 - setuptools
+- tabulate
+- progressbar
 
 ## INSTALL
 
