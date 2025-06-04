@@ -8,16 +8,22 @@ For downloading the data, you can refer to [Trans10K Website](https://xieenze.gi
 ## Environments
 
 - python 3
-- torch = 1.1.0 (>1.1.0 with cause performance drop, we can't find the reason)
-- torchvision
+- torch==2.2.0 (>1.1.0 with cause performance drop, we can't find the reason)
+- torchvision==0.17.0
 - pyyaml
 - Pillow
-- numpy
+- numpy==1.26.4
+- tqdm
+- six
+- IPython
+- thop
+- setuptools
 
 ## INSTALL
 
 ```
 python setup.py develop
+pip install --no-build-isolation -e .
 ```
 ## Pretrained Models and Logs
 We provide the trained models and logs for TransLab.

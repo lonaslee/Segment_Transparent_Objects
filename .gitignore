@@ -3,6 +3,7 @@
 env/
 demo/result/*
 demo/imgs/*
+dataset/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

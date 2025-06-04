@@ -21,13 +21,13 @@ class TransSegmentationBoundary(SegmentationDataset):
     transform : callable, optional
         A function that transforms the image
     """
-    BASE_DIR = 'liquid-5000'
+    BASE_DIR = 'dataset-5000'
     NUM_CLASS = 3
 
     def __init__(self, root='datasets/', split='train', mode=None, transform=None, **kwargs):
         super(TransSegmentationBoundary, self).__init__(root, split, mode, transform, **kwargs)
         self.root = os.path.join(root, self.BASE_DIR)
-        assert os.path.exists(self.root), f"Please put dataset in /datasets/{BASE_DIR}"
+        assert os.path.exists(self.root), f"Please put dataset in /datasets/{self.BASE_DIR}"
         self.images, self.mask_paths = _get_trans10k_pairs(self.root, self.split)
         assert (len(self.images) == len(self.mask_paths))
         if len(self.images) == 0:
@@ -55,8 +55,8 @@ class TransSegmentationBoundary(SegmentationDataset):
         mask = Image.open(self.mask_paths[index]).convert("L")
         # 转换mask
         mask = np.array(mask)#[:,:,:3].mean(-1)
-        mask[mask==100] = 1
-        mask[mask==200] = 2
+        mask[mask > 0] = 1
+        # mask[mask==200] = 2
         # mask = (mask == 255).astype('int32')
         # mask[mask < 100] = 0
         assert mask.max()<=2, mask.max()
