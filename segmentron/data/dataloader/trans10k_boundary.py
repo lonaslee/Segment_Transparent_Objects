@@ -21,7 +21,7 @@ class TransSegmentationBoundary(SegmentationDataset):
         A function that transforms the image
     """
     BASE_DIR = 'dataset-5000'
-    NUM_CLASS = 15
+    NUM_CLASS = 16
 
     def __init__(self, root='datasets/', split='train', mode=None, transform=None, **kwargs):
         super(TransSegmentationBoundary, self).__init__(root, split, mode, transform, **kwargs)
@@ -31,7 +31,7 @@ class TransSegmentationBoundary(SegmentationDataset):
         assert (len(self.images) == len(self.mask_paths))
         if len(self.images) == 0:
             raise RuntimeError("Found 0 images in subfolders of:" + root + "\n")
-        self._key = np.array(range(0, self.NUM_CLASSES))
+        self._key = np.array(range(0, self.NUM_CLASS))
         # self._mapping = np.array(range(-1, len(self._key) - 1)).astype('int32')
         self._mapping = np.array(range(-1, len(self._key) - 1)).astype('int32') + 1
 
@@ -40,7 +40,7 @@ class TransSegmentationBoundary(SegmentationDataset):
         values = np.unique(mask)
 
         for value in values:
-            assert (value in self._mapping)
+            assert (value in self._mapping), f"value {value} not in self.mapping {self._mapping}"
         index = np.digitize(mask.ravel(), self._mapping, right=True)
         return self._key[index].reshape(mask.shape)
 
