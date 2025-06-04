@@ -6,7 +6,6 @@ import logging
 
 from PIL import Image
 from .seg_data_base import SegmentationDataset
-from IPython import embed
 import cv2
 
 class TransSegmentationBoundary(SegmentationDataset):
@@ -22,7 +21,7 @@ class TransSegmentationBoundary(SegmentationDataset):
         A function that transforms the image
     """
     BASE_DIR = 'dataset-5000'
-    NUM_CLASS = 3
+    NUM_CLASS = 15
 
     def __init__(self, root='datasets/', split='train', mode=None, transform=None, **kwargs):
         super(TransSegmentationBoundary, self).__init__(root, split, mode, transform, **kwargs)
@@ -32,8 +31,7 @@ class TransSegmentationBoundary(SegmentationDataset):
         assert (len(self.images) == len(self.mask_paths))
         if len(self.images) == 0:
             raise RuntimeError("Found 0 images in subfolders of:" + root + "\n")
-        self.valid_classes = [0,1,2]
-        self._key = np.array([0,1,2])
+        self._key = np.array(range(0, self.NUM_CLASSES))
         # self._mapping = np.array(range(-1, len(self._key) - 1)).astype('int32')
         self._mapping = np.array(range(-1, len(self._key) - 1)).astype('int32') + 1
 
@@ -55,11 +53,11 @@ class TransSegmentationBoundary(SegmentationDataset):
         mask = Image.open(self.mask_paths[index]).convert("L")
         # 转换mask
         mask = np.array(mask)#[:,:,:3].mean(-1)
-        mask[mask > 0] = 1
+        # mask[mask > 0] = 1
         # mask[mask==200] = 2
         # mask = (mask == 255).astype('int32')
         # mask[mask < 100] = 0
-        assert mask.max()<=2, mask.max()
+        assert mask.max()<=self.NUM_CLASS, mask.max()
         mask = Image.fromarray(mask)
 
         # synchrosized transform
