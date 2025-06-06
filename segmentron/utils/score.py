@@ -44,7 +44,7 @@ class SegmentationMetric(object):
             correct, labeled = batch_pix_accuracy(pred, label)
             inter, union = batch_intersection_union(pred, label, self.nclass)
             mae = batch_mae(pred, label)
-            bers, bers_count = batch_ber(pred, label)
+            bers, bers_count = batch_ber(pred, label, self.nclass)
 
             if self.distributed:
                 correct = reduce_tensor(correct)
@@ -108,8 +108,8 @@ class SegmentationMetric(object):
         self.total_label = 0
         self.total_mae = []
 
-        self.total_bers = torch.zeros(3)
-        self.total_bers_count = torch.zeros(3)
+        self.total_bers = torch.zeros(self.nclass)
+        self.total_bers_count = torch.zeros(self.nclass)
 
 
 def batch_pix_accuracy(output, target):
@@ -136,14 +136,14 @@ def batch_mae(output, target):
     mae = (predict - target).abs().mean()
     return mae
 
-def batch_ber(output, target, class_ids=[1,2]):
+def batch_ber(output, target, nclass):
     predict = torch.argmax(output.long(), 1)
     target = target.long()
-    bers = torch.zeros(3)
-    bers_count = torch.zeros(3)
+    bers = torch.zeros(nclass)
+    bers_count = torch.zeros(nclass)
     bers_count[0] = 1
 
-    for class_id in class_ids:
+    for class_id in range(1, nclass):
         valid = target == class_id
         if valid.sum() == 0:
             continue
