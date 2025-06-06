@@ -99,7 +99,7 @@ class TransSegmentationBoundary(SegmentationDataset):
     @property
     def classes(self):
         """Category names."""
-        return tuple(
+        return (
             'background', 'water', 'wine', 'juice', 'soda', 'cocktails', 'coffee', 'tea', 'boba', 'chemical', 'medical', 'milk', 'spirits', 'honey', 'misc', 'misc' 
         )
 
