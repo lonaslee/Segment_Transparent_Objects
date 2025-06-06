@@ -24,34 +24,66 @@ color_map = {
     15: (100, 200, 255), # misc
 }
 
-if __name__ == '__main__':
-    path = sys.argv[1]
-    assert os.path.exists(path)
-    if os.path.isdir(path):
-        files = [os.path.join(path, f) for f in os.listdir(path)]
-    else:
-        files = [path]
-    print(f"Viewing {len(files)} mask{'s' if len(files) != 1 else ''}:")
-    for file in files:
-        print('\t' + file)
+name_map = {
+    0: 'background',
+    1: 'water',
+    2: 'wine',
+    3: 'juice',
+    4: 'cocktails',
+    5: 'soda',
+    6: 'coffee',
+    7: 'tea',
+    8: 'boba',
+    9: 'chemical',
+    10: 'medical',
+    11: 'milk',
+    12: 'spirits',
+    13: 'honey',
+    14: 'misc',
+    15: 'misc'
+}
 
-    for file in files:
-        print(file)
-        mask_gray = np.array(Image.open(file).convert("L"))
-        print(np.unique(mask_gray))
+if __name__ == '__main__':
+    mask_folder = sys.argv[1]
+    assert os.path.exists(mask_folder)
+    if os.path.isdir(mask_folder):
+        mask_files = os.listdir(mask_folder)
+    else:
+        mask_files = [mask_folder]
+    print(f"Viewing {len(mask_files)} mask{'s' if len(mask_files) != 1 else ''}:")
+    for mask_file in mask_files:
+        print('\t' + mask_file)
+
+    img_folder: str | None = None
+    if len(sys.argv) == 3:
+        img_folder = sys.argv[2]
+
+    for mask_file in mask_files:
+        full_mask_file = os.path.join(mask_folder, mask_file)
+        print(full_mask_file)
+        mask_gray = np.array(Image.open(full_mask_file).convert("L"))
+        classes =np.unique(mask_gray).tolist()
+        classes.remove(0)
+        print('\tclasses:', classes)
+        print('\tnames:  ', [name_map[v] for v in classes])
         mask = np.zeros((*mask_gray.shape, 3), dtype=np.uint8)
         for ival in range(1, 16):
             mask[mask_gray == ival] = color_map[ival]
         
-        cv2.imshow('mask', np.hstack((mask, mask)))
+        img = None
+        if img_folder:
+            img = np.array(Image.open(os.path.join(img_folder, mask_file.replace('.png', '.jpg'))).convert("RGB"))
+
+        cv2.imshow('mask', np.hstack((mask, img if img is not None else mask)))
         while True:
             k = cv2.waitKey()
-            print(k)
             if k == 113 or k == -1: exit(0)
             if k == 114:
                 mask = cv2.resize(mask, (800, 600))
-                cv2.imshow('mask', np.hstack((mask, mask)))
+                img = cv2.resize(img, (800, 600))
+                cv2.imshow('mask', np.hstack((mask, img if img is not None else mask)))
             else:
                 break
+        print()
     print("Done")
         

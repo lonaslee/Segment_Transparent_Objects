@@ -98,9 +98,11 @@ class Evaluator(object):
 
                 save_path = os.path.join('/'.join(cfg.DEMO_DIR.split('/')[:-2]), 'result')
                 makedirs(save_path)
-                cv2.imwrite(os.path.join(save_path, '{}_glass.png'.format(save_name)), glass_res)
+                save_filename = f'{save_name}.png'
+                save_filepath = os.path.join(save_path, save_filename)
+                cv2.imwrite(save_filepath, glass_res)
                 # cv2.imwrite(os.path.join(save_path, '{}_boundary.png'.format(save_name)), boundary_res)
-                print('save {}'.format(save_name))
+                print('Save {}'.format(save_filepath))
 
 
 
