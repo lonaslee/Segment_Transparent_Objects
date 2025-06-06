@@ -99,7 +99,7 @@ class TransSegmentationBoundary(SegmentationDataset):
     @property
     def classes(self):
         """Category names."""
-        return ('background', 'things', 'stuff')
+        return tuple(range(self.NUM_CLASS)) #('background', 'things', 'stuff')
 
 
 def _get_trans10k_pairs(folder, split='train'):

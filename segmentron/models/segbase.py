@@ -19,6 +19,7 @@ class SegBaseModel(nn.Module):
     def __init__(self, need_backbone=True):
         super(SegBaseModel, self).__init__()
         self.nclass = datasets[cfg.DATASET.NAME].NUM_CLASS
+        print("NCLASS:", self.nclass)
         self.aux = cfg.SOLVER.AUX
         self.norm_layer = get_norm(cfg.MODEL.BN_TYPE)
         self.backbone = None

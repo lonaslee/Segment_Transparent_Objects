@@ -86,11 +86,12 @@ class Evaluator(object):
             save_name = os.path.basename(filename).replace('.jpg', '').replace('.png', '')
 
             with torch.no_grad():
+                print("Evaluating", save_name)
                 output, output_boundary = model.evaluate(image)
                 ori_img = cv2.imread(filename)
                 h, w, _ = ori_img.shape
 
-                glass_res = output.argmax(1)[0].data.cpu().numpy().astype('uint8') * 127
+                glass_res = output.argmax(1)[0].data.cpu().numpy().astype('uint8')
                 # boundary_res = output_boundary[0,0].data.cpu().numpy().astype('uint8') * 255
                 glass_res = cv2.resize(glass_res, (w, h), interpolation=cv2.INTER_NEAREST)
                 # boundary_res = cv2.resize(boundary_res, (w, h), interpolation=cv2.INTER_NEAREST)

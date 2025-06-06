@@ -21,7 +21,7 @@ class TransExtraSegmentation(SegmentationDataset):
         A function that transforms the image
     """
     BASE_DIR = 'Trans10K'
-    NUM_CLASS = 3
+    NUM_CLASS = 16
 
     def __init__(self, root='demo/imgs', split='train', mode=None, transform=None, **kwargs):
         super(TransExtraSegmentation, self).__init__(root, split, mode, transform, **kwargs)
